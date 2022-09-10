@@ -42,4 +42,11 @@ func TestDIV(t *testing.T) {
 	} else {
 		t.Logf("Div(10, 5) PASSED. Expected %d, got %f\n", 2, result)
 	}
+
+	datas := []AddData{
+		{1, 2, 3},
+		{3, 5, 8},
+		{7, -4, 3},
+	}
+
 }

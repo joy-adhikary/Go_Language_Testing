@@ -2,6 +2,16 @@ package main
 
 import "testing"
 
+type test struct {
+	input1   int
+	input2   int
+	expected int
+}
+type data struct {
+	input  int
+	output int
+}
+
 func TestCalculate(t *testing.T) {
 
 	if Calculate(5, 1) != 12 {
@@ -28,11 +38,7 @@ func TestInfo(t *testing.T) {
 }
 
 func TestTableCalculate(t *testing.T) {
-	var tests = []struct {
-		input1   int
-		input2   int
-		expected int
-	}{
+	tests := []test{
 		{1, 2, 6},
 		{2, 3, 10},
 		{1, 5, 12},
@@ -49,10 +55,7 @@ func TestTableCalculate(t *testing.T) {
 
 func TestRepeated(t *testing.T) {
 
-	var datas = []struct {
-		input  int
-		output int
-	}{
+	datas := []data{
 		{5, 7},
 		{1, 3},
 		{109, 111},
