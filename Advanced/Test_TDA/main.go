@@ -5,13 +5,13 @@ import (
 	"net/http"
 )
 
-type Info struct {
+type info struct {
 	Name string `json:"name"`
 	Age  int    `json:"age"`
 	Sex  string `json:"sex"`
 }
 
-func Getinfo(url string) (*Info, error) {
+func Getinfo(url string) (*info, error) {
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -19,7 +19,7 @@ func Getinfo(url string) (*Info, error) {
 	}
 	defer resp.Body.Close()
 
-	var info Info
+	var info info
 
 	err = json.NewDecoder(resp.Body).Decode(&info)
 	if err != nil {

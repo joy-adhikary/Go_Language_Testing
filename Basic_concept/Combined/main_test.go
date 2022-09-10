@@ -10,6 +10,14 @@ func TestCalculate(t *testing.T) {
 
 }
 
+func TestCalculate1(t *testing.T) {
+
+	if cal(5) != 7 {
+		t.Error("Failed !!!!")
+	}
+
+}
+
 func TestInfo(t *testing.T) {
 
 	result := "joyadhikary"

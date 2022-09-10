@@ -1,4 +1,4 @@
-package server
+package test_on_http
 
 import (
 	"encoding/json"
