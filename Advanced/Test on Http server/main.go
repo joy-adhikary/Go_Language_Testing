@@ -25,3 +25,7 @@ func GetWeather(url string) (*Weather, error) {
 
 	return &weather, nil
 }
+
+//func Getdata(url string) (*Weather, error) {
+//
+//}
