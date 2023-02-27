@@ -8,6 +8,10 @@ import (
 
 // Some key points you need to know when writing unit test in Go
 
+// Run a specific test case  using => go test -v -run = test function name OR go test -run  test_function_name -v
+
+//t.skip => is for skipping the remaining code .. so jodi amn hoi je , akta variable er value baki sob jaigai lagbe , kintu oi varibale er value e jodi nah thake tahole amra r check e korbo nah baki tuku
+
 //t.cleanup => eita must use korte hobe . karon tahole ager test er data gula theke jabe nah
 
 // go test -coverprofile=coverage.out => how much code this unit test actually cover
@@ -56,7 +60,7 @@ func TestMulti(t *testing.T) {
 	}
 }
 
-//Table driven test approach
+// Table driven test approach
 
 type addTest struct {
 	arg1, arg2, expected int
@@ -121,4 +125,56 @@ func TestMapWithTestify(t *testing.T) {
 	require.Equal(t, map[int]string{1: "1", 2: "2"}, map[int]string{1: "1", 2: "3"})
 	// assert equality
 	assert.Equal(t, map[int]string{1: "1", 2: "2"}, map[int]string{1: "1", 2: "2"})
+}
+
+// Testing a method with TDD approach
+
+var MethodTest = []struct {
+	name string
+}{
+	{"joy adhikary"},
+	{"joy"},
+	{"JOY"},
+}
+
+func TestJoy_PrintName(t *testing.T) {
+
+	res := []joy{
+		{name: "joy adhikary"},
+		{name: "joy"},
+		{name: "JOY"},
+	}
+
+	//for idx, value := range res {
+	//	if result := value.PrintName(); result != MethodTest[idx].name {
+	//		t.Errorf("Failed Because it Expected %s but Found %s", MethodTest[idx].name, result)
+	//	}
+	//}
+
+	for idx, value := range res {
+		t.Run(value.PrintName(), func(t *testing.T) {
+			if result := value.PrintName(); result != MethodTest[idx].name {
+				t.Errorf("Failed Because it Expected %s but Found %s", MethodTest[idx].name, result)
+			}
+		})
+	}
+}
+
+//  			 Skipping test
+
+func TestSkipping(t *testing.T) {
+	sum := 0
+	if sum != 0 {
+		t.Skip("skipping because the sum value is not valid ")
+	}
+	t.Log("Only skip part will not run But rest of the code will be because sum value is valid")
+}
+
+// 				Cleanup function     ( cleanup function is same to defer but it is safe to use  bcz it is concurrently safe
+
+func TestCleanup(t *testing.T) {
+	t.Cleanup(func() {
+		t.Log("Running Clean up function block ")
+	})
+	t.Log("Running Rest of the coding blocks 1st then it will run clean up function block ")
 }
