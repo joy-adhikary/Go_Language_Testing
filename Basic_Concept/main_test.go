@@ -1,0 +1,180 @@
+package Basic_Concept
+
+import (
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"testing"
+)
+
+// Some key points you need to know when writing unit test in Go
+
+// Run a specific test case  using => go test -v -run = test function name OR go test -run  test_function_name -v
+
+//t.skip => is for skipping the remaining code .. so jodi amn hoi je , akta variable er value baki sob jaigai lagbe , kintu oi varibale er value e jodi nah thake tahole amra r check e korbo nah baki tuku
+
+//t.cleanup => eita must use korte hobe . karon tahole ager test er data gula theke jabe nah
+
+// go test -coverprofile=coverage.out => how much code this unit test actually cover
+
+// go tool cover -html=coverage.out => for real view of coverage in HTML view
+
+// T => Testing B=> banchmark  M => main
+
+// t.Run() => which defines a subtest. Basically  each row of the table defines a subtest named [NameOfTheFuction]/[NameOfTheSubTest]
+
+// Parallel() => run all testCase parallel
+
+// t.Errorf() => t.Error* does not stop the execution of the test. Instead, all encountered errors will be reported once the test is completed.
+
+// t.Fatal* => t.Fatal*  stop the execution of the test immediately . And reported the failed test case
+
+// Fuzz testing => The goal of the fuzz test is not to validate the output of the function, but instead to use unexpected inputs to find potential edge cases.
+
+// Testify => Okay so basically testify provides two packages, require and assert. The require package will stop execution if there is a test failure, which helps you fail fast. assert lets you collect information, but accumulate the results of assertions.
+
+// Testify gives a clear mismatch indication which can be helpful for me
+
+//	Normal test approach
+
+func TestAddition(t *testing.T) {
+	Expected := 15
+	Get := add(10, 5)
+	if Expected != Get {
+		t.Errorf("expected %d but get %d", Expected, Get)
+	}
+}
+
+func TestSubstraction(t *testing.T) {
+	Expected := 5
+	Get := Sub(10, 5)
+	if Expected != Get {
+		t.Errorf("expected %d but get %d", Expected, Get)
+	}
+}
+
+func TestMulti(t *testing.T) {
+	Expected := 50
+	Get := Multi(10, 5)
+	if Expected != Get {
+		t.Errorf("expected %d but get %d", Expected, Get)
+	}
+}
+
+// Table driven test approach
+
+type addTest struct {
+	arg1, arg2, expected int
+}
+
+var AddTests = []addTest{
+	{2, 3, 5},
+	{4, 5, 9},
+	{1, 1, 2},
+	{5, 5, 10},
+	{0, 0, 0},
+}
+
+func TestAdd(t *testing.T) {
+	for idx, value := range AddTests {
+		if result := add(value.arg1, value.arg2); result != value.expected {
+			t.Errorf("Expected %d but Found %d On Test %d", value.expected, result, idx+1)
+		}
+	}
+}
+
+// struct type define and use at the same time
+
+var Subtests = []struct {
+	name     string
+	arg1     int
+	arg2     int
+	expected int
+}{
+	{"Test case 1", 5, 3, 2},
+	{"Test case 2", 4, 1, 3},
+	{"Test case 3", 3, 1, 2},
+	{"Test case 4", 15, 5, 10},
+	{"Test case 5", 0, 0, 0},
+}
+
+func TestSub(t *testing.T) {
+	for _, value := range Subtests {
+
+		// 1st way
+
+		//if result := Sub(value.arg1, value.arg2); result != value.expected {
+		//	t.Errorf("%s Failed Because it Expected %d but Found %d", value.name, value.expected, result)
+		//} else {
+		//	t.Logf(" %s passed. Expected %d, got %d \n", value.name, value.expected, result)
+		//}
+
+		//	Optimal way
+
+		t.Run(value.name, func(t *testing.T) {
+			if result := Sub(value.arg1, value.arg2); result != value.expected {
+				t.Errorf("Failed Because it Expected %d but Found %d", value.expected, result)
+			}
+		})
+	}
+}
+
+// Demo Using Testify package
+
+func TestMapWithTestify(t *testing.T) {
+	// require equality
+	require.Equal(t, map[int]string{1: "1", 2: "2"}, map[int]string{1: "1", 2: "3"})
+	// assert equality
+	assert.Equal(t, map[int]string{1: "1", 2: "2"}, map[int]string{1: "1", 2: "2"})
+}
+
+// Testing a method with TDD approach
+
+var MethodTest = []struct {
+	name string
+}{
+	{"joy adhikary"},
+	{"joy"},
+	{"JOY"},
+}
+
+func TestJoy_PrintName(t *testing.T) {
+
+	res := []joy{
+		{name: "joy adhikary"},
+		{name: "joy"},
+		{name: "JOY"},
+	}
+
+	//for idx, value := range res {
+	//	if result := value.PrintName(); result != MethodTest[idx].name {
+	//		t.Errorf("Failed Because it Expected %s but Found %s", MethodTest[idx].name, result)
+	//	}
+	//}
+
+	for idx, value := range res {
+		t.Run(value.PrintName(), func(t *testing.T) {
+			if result := value.PrintName(); result != MethodTest[idx].name {
+				t.Errorf("Failed Because it Expected %s but Found %s", MethodTest[idx].name, result)
+			}
+		})
+	}
+}
+
+//  			 Skipping test
+
+func TestSkipping(t *testing.T) {
+	sum := 0
+	if sum != 0 {
+		t.Skip("skipping because the sum value is not valid ")
+	}
+	t.Log("Only skip part will not run But rest of the code will be because sum value is valid")
+}
+
+// 				Cleanup function     ( cleanup function is same to defer but it is safe to use  bcz it is concurrently safe
+
+func TestCleanup(t *testing.T) {
+	t.Cleanup(func() {
+		t.Log("Running Clean up function block ")
+	})
+	t.Log("Running Rest of the coding blocks 1st then it will run clean up function block ")
+}
