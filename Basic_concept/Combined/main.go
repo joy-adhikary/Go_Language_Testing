@@ -20,7 +20,6 @@ func cal(x int) (result int) {
 
 func info(first string, last string, age int) (name string) {
 	name = first + last
-	// return name
 	return name
 }
 
